@@ -9,6 +9,10 @@ on:
   # Bouton "Run workflow" pour déclencher à la main quand tu veux tester.
   workflow_dispatch:
 
+# Autorise le robot à écrire dans le dépôt (pour committer les données fraîches).
+permissions:
+  contents: write
+
 jobs:
   mise-a-jour:
     runs-on: ubuntu-latest
