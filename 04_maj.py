@@ -60,8 +60,13 @@ NATURES_PROPRES = {
 }
 
 
-def sans_accent(texte: str) -> str:
-    """Enlève les accents : 'Marché' et 'MARCHE' deviennent comparables."""
+def sans_accent(texte) -> str:
+    """Enlève les accents : 'Marché' et 'MARCHE' deviennent comparables.
+
+    Robuste aux valeurs manquantes : une nature vide (NaN) renvoie "".
+    """
+    if not isinstance(texte, str):
+        return ""
     decompose = unicodedata.normalize("NFKD", texte)
     return "".join(c for c in decompose if not unicodedata.combining(c))
 
