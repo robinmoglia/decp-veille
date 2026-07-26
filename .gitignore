@@ -1,0 +1,15 @@
+# Gros fichiers bruts : jamais versionnés (trop lourds pour git).
+data/decp.parquet
+data/decp.parquet.partiel
+data/decp_propre.parquet
+data/decp_propre.csv
+data/rapport_nettoyage.txt
+
+# On versionne UNIQUEMENT les fichiers légers et frais :
+#   data/opportunites.parquet
+#   data/derniere_maj.json
+# (ils ne sont pas listés ici, donc git les suit)
+
+__pycache__/
+.venv/
+.DS_Store
