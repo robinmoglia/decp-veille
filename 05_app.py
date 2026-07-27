@@ -83,10 +83,10 @@ secteur = st.sidebar.text_input(
     placeholder="nettoyage, informatique, formation...",
 )
 
-departements = ["Tous"] + sorted(
-    d for d in df["acheteur_departement_nom"].dropna().unique()
+departements = sorted(d for d in df["acheteur_departement_nom"].dropna().unique())
+departements_choisis = st.sidebar.multiselect(
+    "Départements de l'acheteur (aucun sélectionné = tous)", departements
 )
-departement = st.sidebar.selectbox("Département de l'acheteur", departements)
 
 mois_max = st.sidebar.slider("Expire dans (mois) au maximum", 1, 12, 12)
 
@@ -98,8 +98,8 @@ if secteur.strip():
     resultat = resultat[
         resultat["objet"].str.contains(secteur.strip(), case=False, na=False)
     ]
-if departement != "Tous":
-    resultat = resultat[resultat["acheteur_departement_nom"] == departement]
+if departements_choisis:
+    resultat = resultat[resultat["acheteur_departement_nom"].isin(departements_choisis)]
 resultat = resultat[resultat["dureeRestanteMois"] <= mois_max]
 if montant_min > 0:
     resultat = resultat[resultat["montant"] >= montant_min]
@@ -116,7 +116,9 @@ col3.metric(
 )
 
 # --- Graphique : opportunités par département ------------------------------
-if departement == "Tous" and not resultat.empty:
+# On affiche le graphique quand on ne cible pas un seul département
+# (comparer n'a de sens que sur plusieurs zones).
+if len(departements_choisis) != 1 and not resultat.empty:
     st.subheader("Répartition par département")
     par_dep = (
         resultat["acheteur_departement_nom"].value_counts().head(15).sort_values()
